@@ -1,1 +1,1 @@
-__version__ = "0.2.6-rutube1"
+__version__ = "0.2.6-rutube2"
