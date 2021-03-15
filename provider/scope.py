@@ -73,7 +73,7 @@ def to_names(scope):
     """
     return [
         name
-        for (name, value) in SCOPE_NAME_DICT.iteritems()
+        for (name, value) in SCOPE_NAME_DICT.items()
         if check(value, scope)
     ]
 
@@ -99,6 +99,7 @@ def to_int(*names, **kwargs):
         1
 
     """
-
-    return reduce(lambda prev, next: (prev | SCOPE_NAME_DICT.get(next, 0)),
-            names, kwargs.pop('default', 0))
+    result = kwargs.pop('default', 0)
+    for n in names:
+        result |= SCOPE_NAME_DICT.get(n, 0)
+    return result

@@ -1,4 +1,6 @@
-from ..utils import now
+import base64
+
+from ..utils import now, PY3
 from .forms import ClientAuthForm
 from .models import AccessToken
 
@@ -28,8 +30,11 @@ class BasicClientBackend(object):
             return None
 
         try:
-            basic, base64 = auth.split(' ')
-            client_id, client_secret = base64.decode('base64').split(':')
+            basic, token = auth.split(' ')
+            if PY3 and isinstance(base64, str):
+                token = base64.encode('utf-8')
+
+            client_id, client_secret = base64.b64decode(token).decode('utf-8').split(':')
 
             form = ClientAuthForm({
                 'client_id': client_id,

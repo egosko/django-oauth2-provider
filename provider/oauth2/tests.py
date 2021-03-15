@@ -5,6 +5,8 @@ except ImportError:
     from urllib import parse as urlparse
 
 import datetime
+import base64
+
 from django.http import QueryDict
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -366,9 +368,14 @@ class AuthBackendTest(BaseOAuth2TestCase):
 
     def test_basic_client_backend(self):
         request = type('Request', (object,), {'META': {}})()
-        request.META['HTTP_AUTHORIZATION'] = "Basic " + "{0}:{1}".format(
+        token = "{0}:{1}".format(
             self.get_client().client_id,
-            self.get_client().client_secret).encode('base64')
+            self.get_client().client_secret
+        )
+
+        token = base64.b64encode(token.encode('utf-8')).decode('utf-8')
+
+        request.META['HTTP_AUTHORIZATION'] = "Basic " + token
 
         self.assertEqual(BasicClientBackend().authenticate(request).id,
                          2, "Didn't return the right client.")

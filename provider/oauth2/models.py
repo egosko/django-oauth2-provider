@@ -3,6 +3,7 @@ Default model implementations. Custom database or OAuth backends need to
 implement these models with fields and and methods to be compatible with the
 views in :attr:`provider.views`.
 """
+import sys
 
 from django.db import models
 from django.conf import settings
@@ -10,7 +11,7 @@ from .. import constants
 from ..constants import CLIENT_TYPES
 from ..utils import short_token, long_token, get_token_expiry
 from ..utils import get_code_expiry
-from ..utils import now
+from ..utils import now, PY3
 from .managers import AccessTokenManager
 
 try:
@@ -49,6 +50,9 @@ class Client(models.Model):
     def __unicode__(self):
         return self.redirect_uri
 
+    if PY3:
+        __str__ = __unicode__
+
 
 class Grant(models.Model):
     """
@@ -75,6 +79,9 @@ class Grant(models.Model):
 
     def __unicode__(self):
         return self.code
+
+    if PY3:
+        __str__ = __unicode__
 
 
 class AccessToken(models.Model):
@@ -108,6 +115,9 @@ class AccessToken(models.Model):
 
     def __unicode__(self):
         return self.token
+
+    if PY3:
+        __str__ = __unicode__
 
     def get_expire_delta(self, reference=None):
         """
@@ -151,3 +161,6 @@ class RefreshToken(models.Model):
 
     def __unicode__(self):
         return self.token
+
+    if PY3:
+        __str__ = __unicode__

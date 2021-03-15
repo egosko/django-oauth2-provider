@@ -1,5 +1,6 @@
 import hashlib
 import shortuuid
+import sys
 from datetime import datetime, tzinfo
 from django.conf import settings
 from .constants import EXPIRE_DELTA, EXPIRE_CODE_DELTA
@@ -8,6 +9,10 @@ try:
     from django.utils import timezone
 except ImportError:
     timezone = None
+
+
+PY3 = sys.version_info[0] == 3
+
 
 def now():
     if timezone:
